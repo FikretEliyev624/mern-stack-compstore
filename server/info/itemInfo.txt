@@ -1,0 +1,8 @@
+ 
+ 
+{
+ img:'http://drive.google.com/uc?export=view&id=12FB-a61zOQjIJvgE0cfJ3M9LaLE3nxXW',
+ Name:'Lenovo IdeaPad Gaming 3 15ACH6 82K2002BRK',
+ Specifications:'15.6″ 120Hz/R5-5600H/RAM 8GB/SSD 512GB/RTX 3050 4GB',
+ Price:1799
+}
