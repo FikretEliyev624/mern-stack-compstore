@@ -2,7 +2,7 @@ import React,{useState} from 'react'
 import {  Link, Route, Routes,useNavigate} from "react-router-dom";
 import Login from '../login/Login';
 import axios from 'axios';
-
+import toast, { Toaster } from 'react-hot-toast';
 
 export default function Signup() {
 
@@ -35,12 +35,15 @@ export default function Signup() {
 				error.response.status <= 500
 			) {
 				setError(error.response.data.message);
+        toast.error(error.response.data.message)
 			}
 		}
 	};
 
   
   return (
+    <>
+    <Toaster position="top-center" reverseOrder={false} />
     <div className='dark:bg-darkmode h-[600px]'>
       <div className='flex items-center justify-center dark:bg-darkmode'>
         <div className='bg-[#f3f7f9] h-[500px] w-[600px] mt-16 rounded-lg dark:bg-gray-400 transition duration-500'>
@@ -67,7 +70,6 @@ export default function Signup() {
           </div>
         
         <p className='font-medium my-3 text-gray-700 dark:text-light'>Already have an account? <Link to='/login' className='text-sky hover:text-blue-400 dark:text-yellow-300 dark:hover:text-green-300 italic'>Login</Link></p>
-        {error && <div>{error}</div>}
         <button className='py-2 px-5 mx-2 my-3 rounded-lg hover:bg-blue-800 dark:bg-indigo-300 dark:hover:text-light dark:hover:bg-indigo-600 dark:text-midnight bg-midnight text-white'>Create Account</button>
         </div>
         </form>
@@ -82,5 +84,6 @@ export default function Signup() {
 
 
     </div>
+    </>
   )
 }

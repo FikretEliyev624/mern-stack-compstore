@@ -1,21 +1,40 @@
 import React,{ useEffect , useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 //import card from "./Carousel/img/download-removebg-preview.png";
 import axios from "axios";
 import Pagination from './Pagination';
+import { addToCart } from '../../app/features/cart/cartSlice';
 
 export default function Card() {
-
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
     const [items,setItem]=useState([]);
     const [pageNumber, setPageNumber] = useState(0);
+    const [numberOfPages, setNumberOfPages] = useState(0);
+
+    const { value } = useSelector(state => state.search)
     //const url='http://localhost:5000/products';
 
     useEffect(()=>{
         axios.get(`http://localhost:5000/products?page=${pageNumber}`)
         .then(res=>{
+            setNumberOfPages(res.data.totalPages)
             setItem(res.data.posts)
             console.log(res.data.posts)
         })
     }, [pageNumber])
+
+
+    useEffect(() => {
+        setItem(items.filter(item => item.Name.toLowerCase().includes(value.trim().toLowerCase())))
+    }, [value])
+
+
+    const add = (elem) => {
+        const data = JSON.parse(localStorage.getItem('USER_DATA'))
+        data ? dispatch(addToCart(elem)) : navigate('/signup')
+    }
 
   return (
     <div className=''>
@@ -39,15 +58,19 @@ export default function Card() {
                 </span>
             </div>
             <div className='flex items-center justify-center my-[6px]'>
-            <a className='ml-1 px-3 py-2 bg-lime-600 rounded-lg dark:bg-white dark:hover:bg-warning dark:text-darkmode dark:hover:text-white text-white hover:bg-ice transition duration-500  hover:text-yellow-100' href='/#'>Add to cart</a>
+            <button 
+                className='ml-1 px-3 py-2 bg-lime-600 rounded-lg dark:bg-white dark:hover:bg-warning dark:text-darkmode dark:hover:text-white text-white hover:bg-ice transition duration-500  hover:text-yellow-100' 
+                onClick={() => add(elem)}
+            >
+                Add to cart
+            </button>
             <a className='ml-3 px-3 py-2 bg-indigo-600 rounded-lg dark:bg-cyan-rahid dark:hover:bg-bubble-gum dark:text-light dark:hover:text-white text-white hover:bg-ice transition duration-500  hover:text-yellow-100' href='/#'>Buy now</a>
                 
             </div>
-           
         </div>
         ))}
     </div>
-    <Pagination className='flex justify-center items-center' setNum={setPageNumber}/>
+    <Pagination className='flex justify-center items-center' setNum={setPageNumber} numberOfPages={numberOfPages} pageNumber={pageNumber}/>
     </div>
   )
 }

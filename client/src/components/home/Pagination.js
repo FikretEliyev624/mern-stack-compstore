@@ -3,28 +3,30 @@ import axios from "axios";
 
 
 export default function Pagination(props) {
-  const [pageNumber, setPageNumber] = useState(0);
-  const [numberOfPages, setNumberOfPages] = useState(0);
-  const pages = new Array(numberOfPages).fill(null).map((v, i) => i);
+  // const [pageNumber, setPageNumber] = useState(0);
+  // const [numberOfPages, setNumberOfPages] = useState(0);
+  const pages = new Array(props.numberOfPages).fill(null).map((v, i) => i);
   
-  useEffect(() => {
-    axios.get(`http://localhost:5000/products?page=${pageNumber}`)
-      //.then((response) => response.json())
-      .then((totalPages) => {
-        //console.log(totalPages)
-        setNumberOfPages(totalPages.data.totalPages);
-      });
-  }, [pageNumber]);
- console.log(pageNumber)
+  // useEffect(() => {
+  //   axios.get(`http://localhost:5000/products?page=${pageNumber}`)
+  //     //.then((response) => response.json())
+  //     .then((totalPages) => {
+  //       //console.log(totalPages)
+  //       setNumberOfPages(totalPages.data.totalPages);
+  //     });
+  // }, [pageNumber]);
 
-  const gotoPrevious = () => {
-    props.setNum(pageNumber)
-    setPageNumber(Math.max(0, parseInt(pageNumber) - 1))
-  };
 
   const gotoNext = () => {
-    props.setNum(pageNumber)
-  setPageNumber(Math.min(parseInt(numberOfPages) - 1, parseInt(pageNumber) + 1));
+    if(props.pageNumber + 1 < props.numberOfPages) {
+      props.setNum(props.pageNumber + 1)
+    }
+  };
+
+  const gotoPrevious = () => {
+    if(props.pageNumber !== 0) {
+      props.setNum(props.pageNumber - 1)
+    }
   }
 
   return (
@@ -41,8 +43,9 @@ export default function Pagination(props) {
                   <li key={pageIndex}>
                     
                     <button  onClick={() => {
-                      props.setNum(pageNumber)
-                      setPageNumber(pageIndex)}
+                      props.setNum(pageIndex)
+                      // setPageNumber(pageIndex)
+                    }
                       } className="dark:hover:bg-warning dark:focus:bg-warning w-10 dark:text-white focus:bg-ice h-10 focus:text-white text-indigo-600 transition-colors duration-150 rounded-full focus:shadow-outline hover:bg-indigo-100">
                       {pageIndex + 1}
                     </button>

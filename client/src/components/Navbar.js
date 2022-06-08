@@ -1,4 +1,6 @@
 import React,{useState, useEffect} from 'react';
+import {changeValue} from "../app/features/search/searchSlice"
+import { useDispatch, useSelector } from 'react-redux'
 import { MdComputer } from 'react-icons/md';
 import { HiOutlineShoppingCart } from 'react-icons/hi';
 import { FaSearch } from 'react-icons/fa';
@@ -16,25 +18,25 @@ import Bucket from './addtocart/Bucket';
 
 
 export default function Navbar() {
+  const dispatch = useDispatch()
+  const { value } = useSelector(state => state.search)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
- const lStorage=  localStorage.getItem("token")  ;
- const LSemail=  JSON.parse(localStorage.getItem("email"))  ;
+  const data =  JSON.parse(localStorage.getItem("USER_DATA")) ;
  
- 
-    let userName=LSemail.split('@')
+    let userName = data?.email?.split('@')
   
 useEffect(()=>{
-   if (lStorage && (JSON.parse(lStorage))) {
-   setIsLoggedIn(true)
+    if (data?.token) {
+      setIsLoggedIn(true)
     }else{
       setIsLoggedIn(false)
     } 
-}, [lStorage])
+}, [data?.token])
    
     const [colorTheme,setTheme]=DarkMode();
 
     const logout = ()=>{
-      localStorage.removeItem("token");
+      localStorage.removeItem("USER_DATA");
       setIsLoggedIn(false)
     }
   return (
@@ -61,6 +63,8 @@ useEffect(()=>{
             
               <div  className="relative mx-auto w-max ">
                     <input type="search" 
+                    onChange={(e) => dispatch(changeValue(e.target.value))}
+                    value={value}
               className="peer cursor-pointer relative z-10 h-12 w-12 dark:text-white  rounded-full border bg-transparent pl-12 outline-none focus:w-full focus:cursor-text focus:border-sky dark:focus:border-yellow-200 focus:pl-16 focus:pr-4" />
                 <FaSearch size={30} className="absolute  inset-y-0 dark:text-white text-teal-300 dark:hover:text-yellow-200 my-auto h-8 w-12 border-r border-transparent stroke-gray-500 px-3.5 peer-focus:border-sky dark:peer-focus:border-yellow-200 peer-focus:stroke-teal-300" />
                 

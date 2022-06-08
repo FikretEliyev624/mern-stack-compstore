@@ -1,6 +1,7 @@
 import React,{useState} from 'react';
 import {  Link, Route, Routes } from "react-router-dom";
 import Signup from '../signup/Signup';
+import toast, { Toaster } from 'react-hot-toast';
 import axios from 'axios';
 const Login=() => {
     
@@ -18,8 +19,9 @@ const Login=() => {
 		try {
 			const url = "http://localhost:5000/users/login";
 			const tkn = await axios.post(url, data);
-			localStorage.setItem("token", JSON.stringify(tkn.data.token));
-			localStorage.setItem("email", JSON.stringify(tkn.data.email));
+      localStorage.setItem('USER_DATA', JSON.stringify(tkn.data))
+			// localStorage.setItem("token", JSON.stringify(tkn.data.token));
+			// localStorage.setItem("email", JSON.stringify(tkn.data.email));
 
 			window.location = "/";
 		} catch (error) {
@@ -29,11 +31,14 @@ const Login=() => {
 				error.response.status <= 500
 			) {
 				setError(error.response.data.message);
+        toast.error(error.response.data.message)
 			}
 		}
 	};
-
+  
   return (
+    <>
+    <Toaster position="top-center" reverseOrder={false} />
     <div className='dark:bg-darkmode h-[400px]'>
       <div className='flex items-center justify-center dark:bg-darkmode transition duration-500'>
         <div className='bg-[#f3f7f9] h-[350px] w-[450px] mt-16 rounded-lg dark:bg-gray-400'>
@@ -51,7 +56,6 @@ const Login=() => {
         
          <a href='/#' className='text-sky  hover:text-blue-400 dark:hover:text-blue-200 dark:text-lime-50 italic mt-2'>Forgot Password</a>
          <p className='font-medium my-1 text-gray-700 dark:text-light'>Don't have an account yet? <Link to='/signup' className='text-sky hover:text-blue-400 italic dark:text-yellow-300 dark:hover:text-green-300'>Sign Up</Link></p>
-         {error && <div>{error}</div>}
         <button type='submit' className='py-2 px-5 mx-2 my-2 rounded-lg hover:bg-blue-800 bg-midnight dark:bg-indigo-300 text-white dark:hover:text-light dark:hover:bg-indigo-600 dark:text-midnight'>Login</button>
         </div>
         </form>
@@ -64,6 +68,7 @@ const Login=() => {
               </Routes>
 
     </div>
+    </>
   )
 }
 
